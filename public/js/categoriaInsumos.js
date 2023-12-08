@@ -70,7 +70,7 @@ function validarNombreCatInsumo() {
   }
 
 // URL de la API
-  const url = 'http://localhost:8383/catInsumo';
+  const url = 'https://backend-dolar.onrender.com/catInsumo';
 
   // Función para listar las categorías de insumos
   const listarCategoriasInsumos = async () => {
