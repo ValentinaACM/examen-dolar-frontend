@@ -138,7 +138,7 @@ document
   .addEventListener("input", validarPrecioTipo);
 
 // URL de la API para obtener y manipular datos de tipo de estampado
-const url = "http://localhost:8383/tipoestampado";
+const url = "https://backend-dolar.onrender.com/tipoEstampado";
 
 // Función asincrónica para listar tamaños y tipos de estampados
 const listarTamanoTipoEstampados = async () => {
