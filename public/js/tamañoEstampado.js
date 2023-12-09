@@ -2,7 +2,8 @@
 function calcularTotal() {
   // Obtener el precio del tamaño de estampado desde el input o establecerlo en 0 si está vacío
   var precioTamañoEstampado =
-    parseFloat(document.getElementById("inputPrecioTamañoEstampado").value) || 0;
+    parseFloat(document.getElementById("inputPrecioTamañoEstampado").value) ||
+    0;
 
   // Obtener el precio del tipo de estampado desde el input o establecerlo en 0 si está vacío
   var precioTipoEstampado =
@@ -136,9 +137,8 @@ document
   .getElementById("inputPrecioTipo")
   .addEventListener("input", validarPrecioTipo);
 
-
 // URL de la API para obtener y manipular datos de tipo de estampado
-const url = "https://backend-dolar.onrender.com/tipoestampado";
+const url = "http://localhost:8383/tipoestampado";
 
 // Función asincrónica para listar tamaños y tipos de estampados
 const listarTamanoTipoEstampados = async () => {
@@ -152,6 +152,7 @@ const listarTamanoTipoEstampados = async () => {
     .then(function (data) {
       // Obtener datos de la respuesta
       let listaTamañoTipo = data.msg;
+      console.log(data);
 
       // Limpiar el contenido del elemento con el id "contenido"
       const tbody = document.getElementById("contenido");
@@ -174,6 +175,7 @@ const listarTamanoTipoEstampados = async () => {
           `<td>${tamañoTipoEstampado.precioTamano}</td>` +
           `<td>${tamañoTipoEstampado.precioTipo}</td>` +
           `<td>${tamañoTipoEstampado.total}</td>` +
+          `<td>${tamañoTipoEstampado.precioDolar}</td>` +
           `<td>
               <div class="btn-group" role="group" aria-label="Acciones">
                 <button type="button" class="btn" onclick='editarTamañoTipoEstampado(${JSON.stringify(
@@ -247,6 +249,7 @@ const guardarCambiosEstampado = () => {
   ).value;
   const precioTipoEstampado = document.getElementById("inputPrecioTipo").value;
   const totalEstampado = document.getElementById("inputTotal").value;
+  const precioDolar = document.getElementById("inputPrecioDolar").value;
 
   // Crear objeto con los datos del nuevo estampado
   const nuevoEstampado = {
@@ -255,6 +258,7 @@ const guardarCambiosEstampado = () => {
     precioTamano: precioTamanoEstampado,
     precioTipo: precioTipoEstampado,
     total: totalEstampado,
+    precioDolar: precioDolar,
   };
 
   // Realizar una solicitud POST a la API con los datos del nuevo estampado
@@ -274,6 +278,7 @@ const guardarCambiosEstampado = () => {
       document.getElementById("inputPrecioTamañoEstampado").value = "";
       document.getElementById("inputPrecioTipo").value = "";
       document.getElementById("inputTotal").value = "";
+      document.getElementById("inputPrecioDolar").value = "";
       const inputs = document.querySelectorAll(".btnInput");
       inputs.forEach((input) => {
         input.classList.remove("valido", "invalido");
@@ -321,6 +326,7 @@ const actualizarTamañoTipoEstampado = async () => {
   ).value;
   const precioTipoEstampado = document.getElementById("inputPrecioTipo").value;
   const totalEstampado = document.getElementById("inputTotal").value;
+  const precioDolar = document.getElementById("inputPrecioDolar").value;
 
   // Crear objeto con los datos actualizados
   let tamañoTipoEstampado = {
@@ -330,6 +336,7 @@ const actualizarTamañoTipoEstampado = async () => {
     precioTamano: precioTamanoEstampado,
     precioTipo: precioTipoEstampado,
     total: totalEstampado,
+    precioDolar: precioDolar,
   };
 
   // Realizar una solicitud PUT a la API con los datos actualizados
@@ -343,11 +350,13 @@ const actualizarTamañoTipoEstampado = async () => {
     .then((json) => {
       // Actualizar la lista después de la actualización
       listarTamanoTipoEstampados();
+      // Limpiar los campos del formulario despues de actualizar el registro
       document.getElementById("inputTamañoEstampado").value = "";
       document.getElementById("inputTipoEstampado").value = "";
       document.getElementById("inputPrecioTamañoEstampado").value = "";
       document.getElementById("inputPrecioTipo").value = "";
       document.getElementById("inputTotal").value = "";
+      document.getElementById("inputPrecioDolar").value = "";
       const inputs = document.querySelectorAll(".btnInput");
       inputs.forEach((input) => {
         input.classList.remove("valido", "invalido");
@@ -374,6 +383,14 @@ const editarTamañoTipoEstampado = (tamañoTipoEstampado) => {
     tamañoTipoEstampado._id;
   document.getElementById("inputTamañoEstampado").value =
     tamañoTipoEstampado.tamano;
+  document.getElementById("inputPrecioDolar").value =
+    tamañoTipoEstampado.precioDolar;
+  document.getElementById("inputPrecioTamañoEstampado").value =
+    tamañoTipoEstampado.precioTamano;
+  document.getElementById("inputPrecioTipo").value =
+    tamañoTipoEstampado.precioTipo;
+  document.getElementById("inputTotal").value = tamañoTipoEstampado.total;
+
   const tipoEstampadoSelect = document.getElementById("inputTipoEstampado");
 
   // Iterar sobre las opciones del select para seleccionar la opción correspondiente
@@ -387,12 +404,6 @@ const editarTamañoTipoEstampado = (tamañoTipoEstampado) => {
       break; // Salir del bucle una vez que se haya encontrado la opción
     }
   }
-
-  document.getElementById("inputPrecioTamañoEstampado").value =
-    tamañoTipoEstampado.precioTamano;
-  document.getElementById("inputPrecioTipo").value =
-    tamañoTipoEstampado.precioTipo;
-  document.getElementById("inputTotal").value = tamañoTipoEstampado.total;
 
   // Cambiar el texto principal y hacer scroll al principio de la página
   document.getElementById("texto-principal").textContent =
